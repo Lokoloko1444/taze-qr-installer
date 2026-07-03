@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taze App - QR Code Installer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #04131F 0%, #0a1f2e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00d9ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 18px;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .qr-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .qr-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .qr-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #00d9ff;
+        }
+        
+        .qr-card p {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        
+        .qr-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: inline-block;
+            min-width: 250px;
+        }
+        
+        .qr-container canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #00d9ff, #0099ff);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
+        }
+        
+        .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .info-section {
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .qr-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Taze App Installation</h1>
+            <p>Scan een QR code hieronder om Taze op jouw apparaat te installeren</p>
+        </div>
+        
+        <div class="qr-grid">
+            <!-- Google Play Store -->
+            <div class="qr-card">
+                <div class="icon">🤖</div>
+                <h3>Google Play Store</h3>
+                <p>Android Telefoon/Tablet</p>
+                <div class="qr-container" id="qr-google-play"></div>
+                <div class="button-group">
+                    <a href="https://play.google.com/store/apps/details?id=com.lgstudio.ai.taze" class="btn" target="_blank">
+                        Direct openen
+                    </a>
+                    <button class="btn" onclick="downloadQR('qr-google-play', 'google-play.svg')">
+                        QR downloaden
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Microsoft Store -->
+            <div class="qr-card">
+                <div class="icon">🪟</div>
+                <h3>Microsoft Store</h3>
+                <p>Windows 10/11 Desktop</p>
+                <div class="qr-container" id="qr-microsoft-store"></div>
+                <div class="button-group">
+                    <a href="https://www.microsoft.com/store/apps/9PD2T1FWJHH2" class="btn" target="_blank">
+                        Direct openen
+                    </a>
+                    <button class="btn" onclick="downloadQR('qr-microsoft-store', 'microsoft-store.svg')">
+                        QR downloaden
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Web App -->
+            <div class="qr-card">
+                <div class="icon">💻</div>
+                <h3>Web App</h3>
+                <p>Browser - Overal beschikbaar</p>
+                <div class="qr-container" id="qr-web-app"></div>
+                <div class="button-group">
+                    <a href="https://app.taze.to" class="btn" target="_blank">
+                        Direct openen
+                    </a>
+                    <button class="btn" onclick="downloadQR('qr-web-app', 'web-app.svg')">
+                        QR downloaden
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Direct APK Download -->
+            <div class="qr-card">
+                <div class="icon">📥</div>
+                <h3>Direct Download</h3>
+                <p>APK Bestand - Geen app store</p>
+                <div class="qr-container" id="qr-direct-download"></div>
+                <div class="button-group">
+                    <a href="https://taze.to/downloads/taze-latest.apk" class="btn" target="_blank">
+                        Direct downloaden
+                    </a>
+                    <button class="btn" onclick="downloadQR('qr-direct-download', 'direct-download.svg')">
+                        QR downloaden
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <strong>ℹ️ Hoe te gebruiken:</strong><br><br>
+            1. <strong>Scan een QR code</strong> met jouw telefoon camera of QR scanner app<br>
+            2. <strong>Klik op de link</strong> die verschijnt<br>
+            3. <strong>Volg de instructies</strong> om Taze te installeren<br>
+            4. <strong>Meld je aan</strong> en begin met het beheren van je voorraad!<br><br>
+            
+            <strong>Welke QR te kiezen?</strong><br>
+            • Android telefoon? → Google Play Store<br>
+            • Windows computer? → Microsoft Store<br>
+            • Liever web versie? → Web App<br>
+            • Geen app store? → Direct Download<br><br>
+            
+            <strong>Ondersteuning:</strong> lgstudio144@gmail.com
+        </div>
+    </div>
+    
+    <script>
+        // Generate QR Codes
+        function generateQR(elementId, text, size = 250) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = ''; // Clear previous content
+            
+            new QRCode(container, {
+                text: text,
+                width: size,
+                height: size,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+        
+        // Download QR Code
+        function downloadQR(elementId, filename) {
+            const canvas = document.querySelector(`#${elementId} canvas`);
+            if (!canvas) return;
+            
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = filename.replace('.svg', '.png');
+            link.click();
+        }
+        
+        // Initialize all QR codes
+        window.addEventListener('DOMContentLoaded', () => {
+            generateQR('qr-google-play', 'https://play.google.com/store/apps/details?id=com.lgstudio.ai.taze');
+            generateQR('qr-microsoft-store', 'https://www.microsoft.com/store/apps/9PD2T1FWJHH2');
+            generateQR('qr-web-app', 'https://app.taze.to');
+            generateQR('qr-direct-download', 'https://taze.to/downloads/taze-latest.apk');
+        });
+        
+        // Mobile detection
+        function isMobile() {
+            return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        // Redirect if mobile + Android
+        if (isMobile() && /Android/i.test(navigator.userAgent)) {
+            // Show info: "Tap on QR above for Google Play"
+            console.log("Mobile Android detected - suggest Google Play");
+        }
+    </script>
+</body>
+</html>
